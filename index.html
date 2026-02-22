@@ -1,39 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mistik Oyun</title>
+  <title>Arcane Void</title>
   <style>
     body {
-      background-color: black;
-      color: lime;
+      background: black;
+      color: #00ff88;
+      font-family: monospace;
       text-align: center;
-      font-family: Arial;
       margin-top: 100px;
     }
+
     button {
-      padding: 15px;
-      background: lime;
+      background: #00ff88;
       border: none;
+      padding: 15px 25px;
+      font-size: 16px;
       cursor: pointer;
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      background: black;
+      border: 1px solid #00ff88;
+      color: #00ff88;
     }
   </style>
 </head>
 <body>
-  <h1>Mistik Kehanet</h1>
-  <button onclick="predict()">Kaderimi Öğren</button>
+
+  <h1>ARCANE TERMINAL</h1>
+
+  <input type="text" id="name" placeholder="İsmini gir">
+  <br>
+  <button onclick="predict()">Kehaneti Başlat</button>
+
   <p id="result"></p>
 
   <script>
     function predict() {
+      const name = document.getElementById("name").value;
       const messages = [
-        "Bugün garip bir şey olacak.",
-        "Birisi seni uzaktan izliyor.",
-        "Saat 03:17 dikkatli ol.",
-        "Gizli bir mesaj alacaksın."
+        "Gizli bir kapı yakında açılacak.",
+        "Birisi seni sessizce izliyor.",
+        "Bugün şansın karanlık ama güçlü.",
+        "Gece 03:17'de bir işaret alacaksın."
       ];
+
       const random = Math.floor(Math.random() * messages.length);
-      document.getElementById("result").innerText = messages[random];
+
+      document.getElementById("result").innerText =
+        name + ", " + messages[random];
     }
   </script>
+
 </body>
 </html>
