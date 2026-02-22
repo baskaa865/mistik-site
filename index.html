@@ -2,111 +2,116 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>İmkansız Şifre Oyunu</title>
+<title>Hawk!</title>
 
 <style>
 body{background:#111;color:white;font-family:Arial;text-align:center;padding:40px}
-input{padding:10px;width:400px;font-size:16px}
-button{padding:10px 20px;margin-top:10px}
-#error{color:red;margin-top:20px}
-#success{color:lime;margin-top:20px}
+input {
+    padding: 10px;
+    width: 90%;
+    max-width: 600px;
+    min-height: 50px;
+    font-size: 16px;
+    word-wrap: break-word;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #222;
+    color: white;
+}
+button{padding:10px 20px; margin-top:10px; cursor: pointer; border-radius: 5px; border: none; background: #444; color: white;}
+button:hover{background: #666;}
+#error{color:red;margin-top:20px; font-weight: bold;}
+#success{color:lime;margin-top:20px; font-weight: bold;}
 </style>
 </head>
 
 <body>
 
 <h1>İmkansız Şifre Oyunu</h1>
-<input type="text" id="password" placeholder="Şifreyi yaz...">
+<input type="text" id="password" placeholder="Şifreyi yaz..." autofocus>
 
+<br>
 <button onclick="kontrolEt()">Kontrol Et</button>
 <p id="error"></p>
 <p id="success"></p>
 
 <script>
 function asalMi(n){
-  if(n<2) return false;
-  for(let i=2;i<n;i++) if(n%i===0) return false;
-  return true;
+    if(n<2) return false;
+    for(let i=2;i<n;i++) if(n%i===0) return false;
+    return true;
 }
 
+// ENTER TUŞU ÖZELLİĞİ BURADA
+document.getElementById("password").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        kontrolEt();
+    }
+});
+
 function kontrolEt(){
-let pw=document.getElementById("password").value;
-let error=document.getElementById("error");
-let success=document.getElementById("success");
-error.innerHTML="";
-success.innerHTML="";
+    let pw = document.getElementById("password").value;
+    let error = document.getElementById("error");
+    let success = document.getElementById("success");
+    error.innerHTML = "";
+    success.innerHTML = "";
 
-if(pw.length<4){error.innerHTML="En az 4 karakter olmalı.";return;}
-if(!/[A-Z]/.test(pw)){error.innerHTML="En az bir büyük harf olmalı.";return;}
-if(!/[a-z]/.test(pw)){error.innerHTML="En az bir küçük harf olmalı.";return;}
-if(!/[0-9]/.test(pw)){error.innerHTML="En az bir rakam olmalı.";return;}
-if(!/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/.test(pw)){error.innerHTML="En az bir özel karakter olmalı.";return;}
-if((pw.match(/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g)||[]).length<2){error.innerHTML="En az iki özel karakter olmalı.";return;}
-if(!pw.includes("!")){error.innerHTML="Ünlem içermeli.";return;}
-if(!pw.match(/afganistan|arnavutluk|cezayir|andorra|angola|antigua|barbados|arjantin|ermenistan|avustralya|avusturya|azerbaycan|bahamalar|bahreyn|bangladeş|barbados|belarus|belçika|belize|benin|bhutan|bolivya|bosna-hersek|botsvana|brezilya|brunei|bulgaristan|burkina-faso|burundi|fildişi-sahili|cabo-verde|kamboçya|kamerun|kanada|orta-afrika-cumhuriyeti|çad|şili|çin|kolombiya|komorlar|kongo|kongo-demokratik-cumhuriyeti|kosta-rica|hırvatistan|küba|kıbrıs|çekya|danimarka|cibuti|dominika|dominik-cumhuriyeti|ekvador|mısır|el-salvador|ekvator-ginesi|eritre|estonya|esvatini|etiyopya|fiji|finlandiya|fransa|gabon|gambiya|gürcistan|almanya|ghana|yunanistan|grenada|guatemala|gine|gine-bissau|guyana|haiti|honduras|macaristan|izlanda|hindistan|endonezya|iran|ırak|irlanda|israil|italya|jamaika|japonya|ürdün|kazakistan|kenya|kiribati|kuzey-kore|güney-kore|kuveyt|kırgızistan|laos|letonya|lübnan|lesotho|liberya|libya|lihtenştayn|litvanya|lüksemburg|madagaskar|malavi|malezya|maldivler|mali|malta|marshall-adaları|moritanya|mauritius|meksika|mikronezya|moldova|monako|moğolistan|karadağ|fas|mozambik|myanmar|namibya|nauru|nepal|hollanda|yeni-zelanda|nikaragua|nijer|nijerya|kuzey-makedonya|norveç|oman|pakistan|palau|panama|papua-yeni-gine|paraguay|peru|filipinler|polonya|portekiz|katar|romanya|rusya|ruanda|saint-kitts|saint-lucia|saint-vincent|samoa|san-marino|sao-tome|suudi-arabistan|senegal|sırbistan|seyşeller|sierra-leone|singapur|slovakya|slovenya|solomon-adaları|somali|güney-afrika|güney-sudan|ispanya|sri-lanka|sudan|surinam|isveç|isviçre|suriye|tayvan|tacikistan|tanzanya|tayland|togo|tonga|trinidad|tunus|türkiye|türkmenistan|tuvalu|uganda|ukrayna|birleşik-arap-emirlikleri|birleşik-krallık|amerika-birleşik-devletleri|uruguay|özbekistan|vanuatu|vatikan|venezuela|vietnam|yemen|zambiya|zimbabve/)){error.innerHTML="Bir ülke ismi içermeli.";return;}
-if(!pw.match(/adana|adiyaman|afyonkarahisar|ağri|aksaray|amasya|ankara|antalya|ardahan|artvin|aydin|balikesir|bilecik|bingol|bitlis|bolu|burdur|bursa|canakkale|cankiri|corum|denizli|diyarbakir|duzce|edirne|elazig|erzincan|erzurum|eskişehir|gaziantep|giresun|gumushane|hakkari|hatay|igdir|isparta|istanbul|izmir|kahramanmaras|karabuk|karaman|kars|kastamonu|kayseri|kirikkale|kirklareli|kirsehir|kocaeli|konya|kutahya|malatya|manisa|mardin|mersin|mugla|mus|nevsehir|nigde|ordu|osmaniye|rize|sakarya|samsun|siirt|sinop|sivas|sanliurfa|sirnak|tekirdag|tokat|trabzon|tunceli|usak|van|yalova|yozgat|zonguldak/)){error.innerHTML="Türkiyenin bir şehrini çermeli.";return;}
-if(!pw.match(/merkur|venus|dunya|mars|jupiter|saturn|uranus|neptun|pluton/)){error.innerHTML="Bir gezegen ismi içermeli.";return;}
-if(!pw.match(/pazartesi|sali|carsamba|persembe|cuma|cumartesi|pazar/)){error.innerHTML="Bir hafta günü içermeli.";return;}
-if(!pw.match(/ocak|subat|mart|nisan|mayis|haziran|temmuz|agustos|eylul|ekim|kasim|aralik/)){error.innerHTML="Bir ay ismi içermeli.";return;}
-if(!pw.match(/kırmızı|mavi|yeşil/)){error.innerHTML="Bir renk içermeli.";return;}
-if(!pw.match(/kedi|köpek|aslan/)){error.innerHTML="Bir hayvan içermeli.";return;}
-if(!pw.match(/elma|muz|kiraz/)){error.innerHTML="Bir meyve içermeli.";return;}
-if(!pw.match(/Fe|Na|O/)){error.innerHTML="Bir element sembolü içermeli.";return;}
-if(!pw.match(/[IVXLC]/)){error.innerHTML="Bir Roma rakamı içermeli.";return;}
-if(!pw.match(/2|3|5|7|11/)){error.innerHTML="Bir asal sayı içermeli.";return;}
-if(!pw.match(/1|2|3|5|8|13/)){error.innerHTML="Fibonacci sayısı içermeli.";return;}
-if(!pw.includes("3.14")){error.innerHTML="3.14 içermeli.";return;}
-if(pw.length%2!==0){error.innerHTML="Karakter sayısı çift olmalı.";return;}
-if(!asalMi(pw.length)){error.innerHTML="Karakter sayısı asal olmalı.";return;}
+    // 1. Temel Uzunluk ve Karakter Kontrolleri
+    if (pw.length < 25) { error.innerHTML = "Şifre en az 25 karakter olmalı."; return; }
+    if (!/[A-Z]/.test(pw)) { error.innerHTML = "En az bir büyük harf olmalı."; return; }
+    if (!/[a-z]/.test(pw)) { error.innerHTML = "En az bir küçük harf olmalı."; return; }
+    if (!/[0-9]/.test(pw)) { error.innerHTML = "En az bir rakam olmalı."; return; }
+    
+    const ozelKarakterler = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
+    if (!ozelKarakterler.test(pw)) { error.innerHTML = "En az bir özel karakter içermeli."; return; }
+    if ((pw.match(ozelKarakterler) || []).length < 3) { error.innerHTML = "En az 3 adet özel karakter olmalı."; return; }
+    if (!pw.includes("!")) { error.innerHTML = "Mutlaka ünlem (!) içermeli."; return; }
 
-let buyuk=(pw.match(/[A-Z]/g)||[]).length;
-let kucuk=(pw.match(/[a-z]/g)||[]).length;
-if(buyuk<=kucuk){error.innerHTML="Büyük harf sayısı fazla olmalı.";return;}
+    // 2. Coğrafya ve Uzay
+    if (!pw.match(/türkiye|almanya|japonya|fransa|italya|rusya|ingiltere|amerika/i)) { error.innerHTML = "Geçerli bir ülke ismi içermeli."; return; }
+    if (!pw.match(/adana|adıyaman|afyonkarahisar|ağrı|aksaray|amasya|ankara|antalya|ardahan|artvin|aydın|balıkesir|bilecik|bingöl|bitlis|bolu|burdur|bursa|çanakkale|çankırı|çorum|denizli|diyarbakır|düzce|edirne|elazığ|erzincan|erzurum|eskişehir|gaziantep|giresun|gümüşhane|hakkari|hatay|iğdır|isparta|istanbul|izmir|kahramanmaraş|karabük|karaman|kars|kastamonu|kayseri|kırıkkale|kırklareli|kırşehir|kocaeli|konya|kütahya|malatya|manisa|mardin|mersin|muğla|muş|nevşehir|niğde|ordu|osmaniye|rize|sakarya|samsun|siirt|sinop|sivas|şanlıurfa|şırnak|tekirdağ|tokat|trabzon|tunceli|uşak|van|yalova|yozgat|zonguldak/i)) { error.innerHTML = "Türkiye'den bir şehir ismi içermeli."; return; }
+    if (!pw.match(/merkür|venüs|dünya|mars|jüpiter|satürn|uranüs|neptün/i)) { error.innerHTML = "Bir gezegen ismi içermeli."; return; }
+    if (!pw.match(/ay|güneş|yıldız|bulut|karadelik/i)) { error.innerHTML = "Bir gök cismi içermeli."; return; }
 
-let rakamlar=(pw.match(/[0-9]/g)||[]);
-let toplam=0;
-if(rakamlar){rakamlar.forEach(r=>toplam+=parseInt(r))}
-if(toplam<=25){error.innerHTML="Rakam toplamı 25'ten büyük olmalı.";return;}
+    // 3. Zaman ve Takvim
+    if (!pw.match(/pazartesi|salı|çarşamba|perşembe|cuma|cumartesi|pazar/i)) { error.innerHTML = "Bir hafta günü içermeli."; return; }
+    if (!pw.match(/ocak|şubat|mart|nisan|mayıs|haziran|temmuz|ağustos|eylül|ekim|kasım|aralık/i)) { error.innerHTML = "12 aydan bir ay ismi içermeli."; return; }
+    if (!pw.match(/19\d{2}|20\d{2}/)) { error.innerHTML = "Geçerli bir yıl içermeli."; return; }
+    if (!pw.match(/([01]?[0-9]|2[0-3]):[0-5][0-9]/)) { error.innerHTML = "Saat formatı içermeli."; return; }
 
-if(pw[0]!==pw[0].toUpperCase()){error.innerHTML="İlk harf büyük olmalı.";return;}
-if(!pw.endsWith("42")){error.innerHTML="42 ile bitmeli.";return;}
-if(!pw.includes(" ")){error.innerHTML="Bir boşluk içermeli.";return;}
-if(pw.startsWith(" ")||pw.endsWith(" ")){error.innerHTML="Başta veya sonda boşluk olmamalı.";return;}
-if(!pw.match(/🤡|🔥|😈|😂|😎/)){error.innerHTML="Bir emoji içermeli.";return;}
-if(!pw.match(/Metallica|Megadeth|IronMaiden/)){error.innerHTML="Bir metal grubu içermeli.";return;}
-if(!pw.match(/Zeus|Hades|Thor/)){error.innerHTML="Mitolojik karakter içermeli.";return;}
+    // 4. Bilim ve Matematik
+    if (!pw.match(/fe|na|o|h|he|li|be|c|n|ne|mg|al|si|p|s|cl|ar|k|ca/i)) { error.innerHTML = "Bir element sembolü içermeli."; return; }
+    if (!pw.match(/[IVXLC]/)) { error.innerHTML = "Bir Roma rakamı içermeli."; return; }
+    if (!pw.match(/2|3|5|7|11|13|17|19/)) { error.innerHTML = "Küçük bir asal sayı içermeli."; return; }
+    if (!pw.includes("3.14")) { error.innerHTML = "Pi sayısı içermeli."; return; }
+    if (!pw.match(/[√π∑+-x.∞∆]/)) { error.innerHTML = "Matematiksel bir sembol içermeli."; return; }
+    
+    let rakamlar = pw.match(/\d/g) || [];
+    let toplam = rakamlar.reduce((a, b) => a + parseInt(b), 0);
+    if (toplam <= 25) { error.innerHTML = "Şifredeki rakamların toplamı 25'ten büyük olmalı."; return; }
 
-let asciiToplam=0;
-for(let i=0;i<pw.length;i++){asciiToplam+=pw.charCodeAt(i);}
-if(asciiToplam<=1000){error.innerHTML="ASCII toplamı 1000'den büyük olmalı.";return;}
+    // 5. Yazılım ve Tasarım
+    if (!pw.match(/javascript|python|java|php|ruby|swift|html|css/i)) { error.innerHTML = "Bir programlama dili içermeli."; return; }
 
-if(pw.length<20){error.innerHTML="En az 20 karakter olmalı.";return;}
-if(pw.length>30){error.innerHTML="30 karakteri geçmemeli.";return;}
-if(!pw.match(/kral|vezir|piyon/)){error.innerHTML="Bir satranç taşı içermeli.";return;}
-if(!pw.match(/futbol|basketbol|tenis/)){error.innerHTML="Bir spor dalı içermeli.";return;}
-if(!pw.match(/JavaScript|Python|C\+\+/)){error.innerHTML="Bir programlama dili içermeli.";return;}
-if(!pw.match(/35|34|06/)){error.innerHTML="Bir plaka kodu içermeli.";return;}
-if(!pw.match(/iyi|kötü/)){error.innerHTML="Zıt anlamlı kelime çifti içermeli.";return;}
-if(!pw.match(/aba|ana|ata/)){error.innerHTML="Palindrom kelime içermeli.";return;}
-if(pw[pw.length-1]===pw[pw.length-1].toUpperCase()){error.innerHTML="Büyük harfle bitmemeli.";return;}
-if((pw.match(/[!@#$%^&*]/g)||[]).length<3){error.innerHTML="En az 3 özel karakter olmalı.";return;}
-if(!pw.match(/[şçğıöü]/)){error.innerHTML="Türkçe karakter içermeli.";return;}
-if(pw.match(/^[şçğıöü]+$/)){error.innerHTML="Sadece Türkçe karakterlerden oluşamaz.";return;}
-if(!pw.match(/19|20/)){error.innerHTML="Bir yıl içermeli.";return;}
-if(!pw.match(/[0-9]{2}:[0-9]{2}/)){error.innerHTML="Saat formatı içermeli (13:37 gibi).";return;}
-if(!pw.match(/#[0-9A-Fa-f]{6}/)){error.innerHTML="Hex renk kodu içermeli.";return;}
-if(!pw.match(/4|6|8/)){error.innerHTML="Asal olmayan çift sayı içermeli.";return;}
-if(pw.length<25){error.innerHTML="En az 25 karakter olmalı.";return;}
-if(!pw.includes(" ")){error.innerHTML="En az bir boşluk daha ekle.";return;}
-if(!pw.match(/[√π∑]/)){error.innerHTML="Matematik sembolü içermeli.";return;}
-if(!pw.match(/<div>|<span>/)){error.innerHTML="HTML etiketi içermeli.";return;}
-if(pw.split("").reverse().join("").length<6){error.innerHTML="Tersten en az 6 karakter olmalı.";return;}
-if((pw.match(/[aeiouAEIOU]/g)||[]).length<5){error.innerHTML="En az 5 sesli harf olmalı.";return;}
-if(!pw.match(/Ay|Güneş|Dünya/)){error.innerHTML="Bir gök cismi içermeli.";return;}
-if(!pw.match(/istanbul|paris|roma/)){error.innerHTML="Bir dünya şehri içermeli.";return;}
-if(!pw.match(/42/)){error.innerHTML="42 mutlaka içermeli.";return;}
+    // 6. Eğlence ve Kültür
+    if (!pw.match(/😀|😂|😍|🔥|🚀|✨|😎|🤡|😈|💀/)) { error.innerHTML = "Popüler bir emoji içermeli."; return; }
+    if (!pw.match(/hilal|esin|lidya|mina|sueda|zoktay/i)) { error.innerHTML = "Manifest grubundan bir üye içermeli."; return; }
+    if (!pw.match(/kral|vezir|piyon|kale|at|fil/i)) { error.innerHTML = "Bir satranç taşı içermeli."; return; }
+    if (!pw.match(/futbol|basketbol|tenis|voleybol/i)) { error.innerHTML = "Bir spor dalı içermeli."; return; }
+    if (!pw.match(/sucuk/i)) { error.innerHTML = "Şahinin lakabını (sucuk) içermelidir."; return; }
 
-error.innerHTML="Şifreyi beğenmedim. Tekrar dene :)))).";
+    // 7. Dil Bilgisi ve Mantık
+    if (!pw.match(/[şçğıöüİĞÜŞÇÖ]/)) { error.innerHTML = "En az bir Türkçe karakter içermeli."; return; }
+
+    // Başlangıç ve Bitiş Kuralları
+    if (pw[0] !== pw[0].toUpperCase()) { error.innerHTML = "İlk harf büyük olmalı."; return; }
+    if (!pw.endsWith("42")) { error.innerHTML = "42 ile bitmeli."; return; }
+    if (pw.includes("  ")) { error.innerHTML = "Ardışık çift boşluk olmamalı."; return; }
+
+    // BURAYI DÜZELTTİK: Eğer tüm şartlar geçerse bu çalışır
+    success.innerHTML = "Helal olsun! Şifre kabul edildi.";
+    error.innerHTML = "";
 }
 </script>
 </body>
