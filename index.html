@@ -1,57 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Arcane Void</title>
+  <title>Arcane Games</title>
   <style>
     body {
       background: black;
       color: #00ff88;
       font-family: monospace;
       text-align: center;
-      margin-top: 100px;
+      margin-top: 80px;
     }
 
     button {
       background: #00ff88;
       border: none;
-      padding: 15px 25px;
-      font-size: 16px;
+      padding: 12px 20px;
+      margin: 10px;
       cursor: pointer;
     }
 
-    input {
-      padding: 10px;
-      margin: 10px;
-      background: black;
-      border: 1px solid #00ff88;
-      color: #00ff88;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <h1>ARCANE TERMINAL</h1>
+  <h1>ARCANE MINI GAMES</h1>
 
-  <input type="text" id="name" placeholder="İsmini gir">
-  <br>
-  <button onclick="predict()">Kehaneti Başlat</button>
+  <div id="menu">
+    <button onclick="showGame('fortune')">Kehanet</button>
+    <button onclick="showGame('reflex')">Refleks Oyunu</button>
+    <button onclick="showGame('guess')">Sayı Tahmin</button>
+  </div>
 
-  <p id="result"></p>
+  <div id="fortune" class="hidden">
+    <h2>Kehanet</h2>
+    <button onclick="predict()">Kehaneti Başlat</button>
+    <p id="fortuneResult"></p>
+    <button onclick="goBack()">Geri</button>
+  </div>
+
+  <div id="reflex" class="hidden">
+    <h2>Refleks Oyunu</h2>
+    <button onclick="startReflex()">Başlat</button>
+    <p id="reflexResult"></p>
+    <button onclick="goBack()">Geri</button>
+  </div>
+
+  <div id="guess" class="hidden">
+    <h2>Sayı Tahmin (1-10)</h2>
+    <input type="number" id="guessInput">
+    <button onclick="checkGuess()">Tahmin Et</button>
+    <p id="guessResult"></p>
+    <button onclick="goBack()">Geri</button>
+  </div>
 
   <script>
+    function showGame(gameId) {
+      document.getElementById("menu").classList.add("hidden");
+      document.getElementById(gameId).classList.remove("hidden");
+    }
+
+    function goBack() {
+      document.getElementById("menu").classList.remove("hidden");
+      document.querySelectorAll("div[id!='menu']").forEach(div => {
+        div.classList.add("hidden");
+      });
+    }
+
+    // 1️⃣ Kehanet
     function predict() {
-      const name = document.getElementById("name").value;
       const messages = [
-        "Gizli bir kapı yakında açılacak.",
-        "Birisi seni sessizce izliyor.",
-        "Bugün şansın karanlık ama güçlü.",
-        "Gece 03:17'de bir işaret alacaksın."
+        "Bugün garip bir şey olacak.",
+        "Birisi seni izliyor.",
+        "Şans seninle.",
+        "Gizli bir kapı açılacak."
       ];
-
       const random = Math.floor(Math.random() * messages.length);
+      document.getElementById("fortuneResult").innerText = messages[random];
+    }
 
-      document.getElementById("result").innerText =
-        name + ", " + messages[random];
+    // 2️⃣ Refleks
+    let reflexStart;
+
+    function startReflex() {
+      document.getElementById("reflexResult").innerText = "Bekle...";
+      const delay = Math.random() * 3000 + 1000;
+
+      setTimeout(() => {
+        reflexStart = Date.now();
+        document.getElementById("reflexResult").innerText = "TIKLA!";
+        document.body.onclick = stopReflex;
+      }, delay);
+    }
+
+    function stopReflex() {
+      const time = Date.now() - reflexStart;
+      document.getElementById("reflexResult").innerText = 
+        "Tepki süren: " + time + " ms";
+      document.body.onclick = null;
+    }
+
+    // 3️⃣ Sayı Tahmin
+    const secretNumber = Math.floor(Math.random() * 10) + 1;
+
+    function checkGuess() {
+      const guess = Number(document.getElementById("guessInput").value);
+      if (guess === secretNumber) {
+        document.getElementById("guessResult").innerText = "Doğru bildin!";
+      } else {
+        document.getElementById("guessResult").innerText = "Yanlış, tekrar dene.";
+      }
     }
   </script>
 
