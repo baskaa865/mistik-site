@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mistik Oyun</title>
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      text-align: center;
+      font-family: Arial;
+      margin-top: 100px;
+    }
+    button {
+      padding: 15px;
+      background: lime;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mistik Kehanet</h1>
+  <button onclick="predict()">Kaderimi Öğren</button>
+  <p id="result"></p>
+
+  <script>
+    function predict() {
+      const messages = [
+        "Bugün garip bir şey olacak.",
+        "Birisi seni uzaktan izliyor.",
+        "Saat 03:17 dikkatli ol.",
+        "Gizli bir mesaj alacaksın."
+      ];
+      const random = Math.floor(Math.random() * messages.length);
+      document.getElementById("result").innerText = messages[random];
+    }
+  </script>
+</body>
+</html>
