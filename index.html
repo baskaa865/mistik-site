@@ -99,7 +99,7 @@ function kontrolEt(){
     if (!pw.match(/hilal|esin|lidya|mina|sueda|zoktay/i)) { error.innerHTML = "Manifest grubundan bir üye içermeli."; return; }
     if (!pw.match(/kral|vezir|piyon|kale|at|fil/i)) { error.innerHTML = "Bir satranç taşı içermeli."; return; }
     if (!pw.match(/futbol|basketbol|tenis|voleybol/i)) { error.innerHTML = "Bir spor dalı içermeli."; return; }
-    if (!pw.match(/sucuk/i)) { error.innerHTML = "Şahinin lakabını (sucuk) içermelidir."; return; }
+    if (!pw.match(/sucuk/i)) { error.innerHTML = "Şahinin lakabını (dükkan) içermelidir."; return; }
 
     // 7. Dil Bilgisi ve Mantık
     if (!pw.match(/[şçğıöüİĞÜŞÇÖ]/)) { error.innerHTML = "En az bir Türkçe karakter içermeli."; return; }
