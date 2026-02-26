@@ -95,7 +95,8 @@ function kontrolEt(){
     if (!pw.match(/javascript|python|java|php|ruby|swift|html|css/i)) { error.innerHTML = "Bir programlama dili içermeli."; return; }
 
     // 6. Eğlence ve Kültür
-    if (!pw.match(/😀|😂|😍|🔥|🚀|✨|😎|🤡|😈|💀/)) { error.innerHTML = "Popüler bir emoji içermeli."; return; }
+    if (!pw.match(/😀|😂|😍|🔥|🚀|✨|😎|🤡|😭|😈|💀/)) { error.innerHTML = "Popüler bir emoji içermeli."; return; }
+     if (!pw.match(/09.09.2009|/i)) { error.innerHTML = "arifinh doğum gününü içermeli (örn=xx.xx.xxxx)."; return; }
     if (!pw.match(/hilal|esin|lidya|mina|sueda|zoktay/i)) { error.innerHTML = "Manifest grubundan bir üye içermeli."; return; }
     if (!pw.match(/kral|vezir|piyon|kale|at|fil/i)) { error.innerHTML = "Bir satranç taşı içermeli."; return; }
     if (!pw.match(/futbol|basketbol|tenis|voleybol/i)) { error.innerHTML = "Bir spor dalı içermeli."; return; }
@@ -117,4 +118,5 @@ function kontrolEt(){
 </body>
 
 </html>
+
 
