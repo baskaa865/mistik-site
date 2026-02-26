@@ -58,7 +58,7 @@ function kontrolEt(){
     success.innerHTML = "";
 
     // 1. Temel Uzunluk ve Karakter Kontrolleri
-    if (pw.length < 25) { error.innerHTML = "Şifre en az 25 karakter olmalı."; return; }
+    if (pw.length < 5) { error.innerHTML = "Şifre en az 5 karakter olmalı."; return; }
     if (!/[A-Z]/.test(pw)) { error.innerHTML = "En az bir büyük harf olmalı."; return; }
     if (!/[a-z]/.test(pw)) { error.innerHTML = "En az bir küçük harf olmalı."; return; }
     if (!/[0-9]/.test(pw)) { error.innerHTML = "En az bir rakam olmalı."; return; }
@@ -115,4 +115,5 @@ function kontrolEt(){
 }
 </script>
 </body>
+
 </html>
