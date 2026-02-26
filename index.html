@@ -2,10 +2,10 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Hawk!</title>
+<title>Hawk! - Ultimate Edition</title>
 
 <style>
-body{background:#111;color:white;font-family:Arial;text-align:center;padding:40px}
+body{background:#111;color:white;font-family:Arial;text-align:center;padding:40px; overflow-x: hidden;}
 input {
     padding: 10px;
     width: 90%;
@@ -17,11 +17,39 @@ input {
     border: 1px solid #444;
     background: #222;
     color: white;
+    transition: transform 0.2s;
 }
-button{padding:10px 20px; margin-top:10px; cursor: pointer; border-radius: 5px; border: none; background: #444; color: white;}
+#btnContainer { height: 60px; margin-top: 20px; position: relative; }
+button {
+    padding: 10px 20px; 
+    cursor: pointer; 
+    border-radius: 5px; 
+    border: none; 
+    background: #444; 
+    color: white;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.1s ease;
+}
 button:hover{background: #666;}
-#error{color:red;margin-top:20px; font-weight: bold;}
-#success{color:lime;margin-top:20px; font-weight: bold;}
+
+/* Titreme Efekti */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-1deg); }
+    50% { transform: translateX(5px) rotate(1deg); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.shake-it {
+    animation: shake 0.2s;
+    animation-iteration-count: 3;
+}
+
+#error{color:red; margin-top:20px; font-weight: bold; min-height: 20px;}
+#success{color:lime; margin-top:20px; font-weight: bold;}
 </style>
 </head>
 
@@ -30,19 +58,39 @@ button:hover{background: #666;}
 <h1>ŞİFRE OLUŞTUR</h1>
 <input type="text" id="password" placeholder="Şifreyi yaz..." autofocus>
 
-<br>
-<button onclick="kontrolEt()">Kontrol Et</button>
+<div id="btnContainer">
+    <button id="checkBtn" onclick="kontrolEt()" onmouseover="kacBenden()">Kontrol Et</button>
+</div>
+
 <p id="error"></p>
 <p id="success"></p>
 
 <script>
+let canClick = true;
+
+// Butonun kaçma fonksiyonu
+function kacBenden() {
+    let errorText = document.getElementById("error").innerHTML;
+    // Sadece hata varsa veya henüz hiç kontrol edilmediyse kaçsın (Oyun başlasın!)
+    if (errorText !== "" || document.getElementById("success").innerHTML === "") {
+        let btn = document.getElementById("checkBtn");
+        let container = document.getElementById("btnContainer");
+        
+        // Rastgele yönler (Ekran dışına çıkmaması için sınırlı)
+        let x = Math.random() * (window.innerWidth - 150) - (window.innerWidth / 2) + 75;
+        let y = Math.random() * 100 - 50; 
+
+        btn.style.left = `calc(50% + ${x}px)`;
+        btn.style.top = `${y}px`;
+    }
+}
+
 function asalMi(n){
     if(n<2) return false;
     for(let i=2;i<n;i++) if(n%i===0) return false;
     return true;
 }
 
-// ENTER TUŞU ÖZELLİĞİ BURADA
 document.getElementById("password").addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -54,70 +102,84 @@ function kontrolEt(){
     let pw = document.getElementById("password").value;
     let error = document.getElementById("error");
     let success = document.getElementById("success");
+    let inputField = document.getElementById("password");
+    
     error.innerHTML = "";
     success.innerHTML = "";
+    error.classList.remove("shake-it");
+    inputField.classList.remove("shake-it");
+
+    // Kontrol Fonksiyonu: Hata varsa işlemleri yapar
+    function hataVer(mesaj) {
+        error.innerHTML = mesaj;
+        // Titreme efektini tetikle (Reflow için void kullanımı)
+        void error.offsetWidth; 
+        error.classList.add("shake-it");
+        inputField.classList.add("shake-it");
+        return;
+    }
 
     // 1. Temel Uzunluk ve Karakter Kontrolleri
-    if (pw.length <5) { error.innerHTML = "Şifre en az 5 karakter olmalı."; return; }
-    if (!/[A-Z]/.test(pw)) { error.innerHTML = "En az bir büyük harf olmalı."; return; }
-    if (!/[a-z]/.test(pw)) { error.innerHTML = "En az bir küçük harf olmalı."; return; }
-    if (!/[0-9]/.test(pw)) { error.innerHTML = "En az bir rakam olmalı."; return; }
+    if (pw.length <5) return hataVer("Şifre en az 5 karakter olmalı.");
+    if (!/[A-Z]/.test(pw)) return hataVer("En az bir büyük harf olmalı.");
+    if (!/[a-z]/.test(pw)) return hataVer("En az bir küçük harf olmalı.");
+    if (!/[0-9]/.test(pw)) return hataVer("En az bir rakam olmalı.");
     
     const ozelKarakterler = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
-    if (!ozelKarakterler.test(pw)) { error.innerHTML = "En az bir özel karakter içermeli."; return; }
-    if ((pw.match(ozelKarakterler) || []).length < 3) { error.innerHTML = "En az 3 adet özel karakter olmalı."; return; }
-    if (!pw.includes("!")) { error.innerHTML = "Mutlaka ünlem (!) içermeli."; return; }
+    if (!ozelKarakterler.test(pw)) return hataVer("En az bir özel karakter içermeli.");
+    if ((pw.match(ozelKarakterler) || []).length < 3) return hataVer("En az 3 adet özel karakter olmalı.");
+    if (!pw.includes("!")) return hataVer("Mutlaka ünlem (!) içermeli.");
 
     // 2. Coğrafya ve Uzay
-    if (!pw.match(/türkiye|almanya|japonya|fransa|italya|rusya|ingiltere|amerika/i)) { error.innerHTML = "Geçerli bir ülke ismi içermeli."; return; }
-    if (!pw.match(/adana|adıyaman|afyonkarahisar|ağrı|aksaray|amasya|ankara|antalya|ardahan|artvin|aydın|balıkesir|bilecik|bingöl|bitlis|bolu|burdur|bursa|çanakkale|çankırı|çorum|denizli|diyarbakır|düzce|edirne|elazığ|erzincan|erzurum|eskişehir|gaziantep|giresun|gümüşhane|hakkari|hatay|iğdır|isparta|istanbul|izmir|kahramanmaraş|karabük|karaman|kars|kastamonu|kayseri|kırıkkale|kırklareli|kırşehir|kocaeli|konya|kütahya|malatya|manisa|mardin|mersin|muğla|muş|nevşehir|niğde|ordu|osmaniye|rize|sakarya|samsun|siirt|sinop|sivas|şanlıurfa|şırnak|tekirdağ|tokat|trabzon|tunceli|uşak|van|yalova|yozgat|zonguldak/i)) { error.innerHTML = "Türkiye'den bir şehir ismi içermeli."; return; }
-    if (!pw.match(/merkür|venüs|dünya|mars|jüpiter|satürn|uranüs|neptün/i)) { error.innerHTML = "Bir gezegen ismi içermeli."; return; }
-    if (!pw.match(/ay|güneş|yıldız|bulut|karadelik/i)) { error.innerHTML = "Bir gök cismi içermeli."; return; }
+    if (!pw.match(/türkiye|almanya|japonya|fransa|italya|rusya|ingiltere|amerika/i)) return hataVer("Geçerli bir ülke ismi içermeli.");
+    if (!pw.match(/adana|adıyaman|afyonkarahisar|ağrı|aksaray|amasya|ankara|antalya|ardahan|artvin|aydın|balıkesir|bilecik|bingöl|bitlis|bolu|burdur|bursa|çanakkale|çankırı|çorum|denizli|diyarbakır|düzce|edirne|elazığ|erzincan|erzurum|eskişehir|gaziantep|giresun|gümüşhane|hakkari|hatay|iğdır|isparta|istanbul|izmir|kahramanmaraş|karabük|karaman|kars|kastamonu|kayseri|kırıkkale|kırklareli|kırşehir|kocaeli|konya|kütahya|malatya|manisa|mardin|mersin|muğla|muş|nevşehir|niğde|ordu|osmaniye|rize|sakarya|samsun|siirt|sinop|sivas|şanlıurfa|şırnak|tekirdağ|tokat|trabzon|tunceli|ushak|van|yalova|yozgat|zonguldak/i)) return hataVer("Türkiye'den bir şehir ismi içermeli.");
+    if (!pw.match(/merkür|venüs|dünya|mars|jüpiter|satürn|uranüs|neptün/i)) return hataVer("Bir gezegen ismi içermeli.");
+    if (!pw.match(/ay|güneş|yıldız|bulut|karadelik/i)) return hataVer("Bir gök cismi içermeli.");
 
     // 3. Zaman ve Takvim
-    if (!pw.match(/pazartesi|salı|çarşamba|perşembe|cuma|cumartesi|pazar/i)) { error.innerHTML = "Bir hafta günü içermeli."; return; }
-    if (!pw.match(/ocak|şubat|mart|nisan|mayıs|haziran|temmuz|ağustos|eylül|ekim|kasım|aralık/i)) { error.innerHTML = "12 aydan bir ay ismi içermeli."; return; }
-    if (!pw.match(/19\d{2}|20\d{2}/)) { error.innerHTML = "Geçerli bir yıl içermeli."; return; }
-    if (!pw.match(/([01]?[0-9]|2[0-3]):[0-5][0-9]/)) { error.innerHTML = "Saat formatı içermeli."; return; }
+    if (!pw.match(/pazartesi|salı|çarşamba|perşembe|cuma|cumartesi|pazar/i)) return hataVer("Bir hafta günü içermeli.");
+    if (!pw.match(/ocak|şubat|mart|nisan|mayıs|haziran|temmuz|ağustos|eylül|ekim|kasım|aralık/i)) return hataVer("12 aydan bir ay ismi içermeli.");
+    if (!pw.match(/19\d{2}|20\d{2}/)) return hataVer("Geçerli bir yıl içermeli.");
+    if (!pw.match(/([01]?[0-9]|2[0-3]):[0-5][0-9]/)) return hataVer("Saat formatı içermeli.");
 
     // 4. Bilim ve Matematik
-    if (!pw.match(/fe|na|o|h|he|li|be|c|n|ne|mg|al|si|p|s|cl|ar|k|ca/i)) { error.innerHTML = "Bir element sembolü içermeli."; return; }
-    if (!pw.match(/[IVXLC]/)) { error.innerHTML = "Bir Roma rakamı içermeli."; return; }
-    if (!pw.match(/2|3|5|7|11|13|17|19/)) { error.innerHTML = "Küçük bir asal sayı içermeli."; return; }
-    if (!pw.includes("3.14")) { error.innerHTML = "Pi sayısı içermeli."; return; }
-    if (!pw.match(/[√π∑+-x.∞∆]/)) { error.innerHTML = "Matematiksel bir sembol içermeli."; return; }
+    if (!pw.match(/fe|na|o|h|he|li|be|c|n|ne|mg|al|si|p|s|cl|ar|k|ca/i)) return hataVer("Bir element sembolü içermeli.");
+    if (!pw.match(/[IVXLC]/)) return hataVer("Bir Roma rakamı içermeli.");
+    if (!pw.match(/2|3|5|7|11|13|17|19/)) return hataVer("Küçük bir asal sayı içermeli.");
+    if (!pw.includes("3.14")) return hataVer("Pi sayısı içermeli.");
+    if (!pw.match(/[√π∑+-x.∞∆]/)) return hataVer("Matematiksel bir sembol içermeli.");
     
     let rakamlar = pw.match(/\d/g) || [];
     let toplam = rakamlar.reduce((a, b) => a + parseInt(b), 0);
-    if (toplam <= 25) { error.innerHTML = "Şifredeki rakamların toplamı 25'ten büyük olmalı."; return; }
+    if (toplam <= 25) return hataVer("Şifredeki rakamların toplamı 25'ten büyük olmalı.");
 
     // 5. Yazılım ve Tasarım
-    if (!pw.match(/javascript|python|java|php|ruby|swift|html|css/i)) { error.innerHTML = "Bir programlama dili içermeli."; return; }
+    if (!pw.match(/javascript|python|java|php|ruby|swift|html|css/i)) return hataVer("Bir programlama dili içermeli.");
 
     // 6. Eğlence ve Kültür
-    if (!pw.match(/😀|😂|😍|🔥|🚀|✨|😎|🤡|😭|😈|💀/)) { error.innerHTML = "Popüler bir emoji içermeli."; return; }
-     if (!pw.match(/09.09.2009|/i)) { error.innerHTML = "arifinh doğum gününü içermeli (örn=xx.xx.xxxx)."; return; }
-    if (!pw.match(/hilal|esin|lidya|mina|sueda|zoktay/i)) { error.innerHTML = "Manifest grubundan bir üye içermeli."; return; }
-    if (!pw.match(/kral|vezir|piyon|kale|at|fil/i)) { error.innerHTML = "Bir satranç taşı içermeli."; return; }
-    if (!pw.match(/futbol|basketbol|tenis|voleybol/i)) { error.innerHTML = "Bir spor dalı içermeli."; return; }
-    if (!pw.match(/sucuk/i)) { error.innerHTML = "Şahinin lakabını (dükkan) içermelidir."; return; }
+    if (!pw.match(/😀|😂|😍|🔥|🚀|✨|😎|🤡|😭|😈|💀/)) return hataVer("Popüler bir emoji içermeli.");
+    if (!pw.match(/09.09.2009/)) return hataVer("Arifin doğum gününü içermeli (09.09.2009).");
+    if (!pw.match(/hilal|esin|lidya|mina|sueda|zoktay/i)) return hataVer("Manifest grubundan bir üye içermeli.");
+    if (!pw.match(/kral|vezir|piyon|kale|at|fil/i)) return hataVer("Bir satranç taşı içermeli.");
+    if (!pw.match(/futbol|basketbol|tenis|voleybol/i)) return hataVer("Bir spor dalı içermeli.");
+    if (!pw.match(/sucuk/i)) return hataVer("Şahinin lakabını (dükkan) içermelidir.");
 
     // 7. Dil Bilgisi ve Mantık
-    if (!pw.match(/[şçğıöüİĞÜŞÇÖ]/)) { error.innerHTML = "En az bir Türkçe karakter içermeli."; return; }
+    if (!pw.match(/[şçğıöüİĞÜŞÇÖ]/)) return hataVer("En az bir Türkçe karakter içermeli.");
 
     // Başlangıç ve Bitiş Kuralları
-    if (pw[0] !== pw[0].toUpperCase()) { error.innerHTML = "İlk harf büyük olmalı."; return; }
-    if (!pw.endsWith("42")) { error.innerHTML = "42 ile bitmeli."; return; }
-    if (pw.includes("  ")) { error.innerHTML = "Ardışık çift boşluk olmamalı."; return; }
+    if (pw[0] !== pw[0].toUpperCase()) return hataVer("İlk harf büyük olmalı.");
+    if (!pw.endsWith("42")) return hataVer("42 ile bitmeli.");
+    if (pw.includes("  ")) return hataVer("Ardışık çift boşluk olmamalı.");
 
-    // BURAYI DÜZELTTİK: Eğer tüm şartlar geçerse bu çalışır
+    // Başarılı
     success.innerHTML = "Helal olsun! Şifre kabul edildi.";
     error.innerHTML = "";
+    // Butonu yerine geri getir
+    let btn = document.getElementById("checkBtn");
+    btn.style.left = "50%";
+    btn.style.top = "0";
 }
 </script>
 </body>
-
 </html>
-
-
-
